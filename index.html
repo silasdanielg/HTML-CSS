@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevMaster - Resumão Completo de HTML & CSS</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        darkBg: '#0b0f19',
+                        darkCard: '#111827',
+                        darkBorder: '#1f293d',
+                        accentOrange: '#f97316',
+                        accentBlue: '#3b82f6',
+                        accentCyan: '#06b6d4',
+                        accentEmerald: '#10b981',
+                        accentPurple: '#a855f7',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f1f5f9; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1f293d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        .tab-btn.active {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-left: 4px solid #3b82f6;
+        }
+        .code-keyword { color: #f472b6; }
+        .code-tag { color: #38bdf8; }
+        .code-attr { color: #facc15; }
+        .code-val { color: #4ade80; }
+        .code-prop { color: #a78bfa; }
+        .code-comment { color: #6b7280; font-style: italic; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased selection:bg-blue-500 selection:text-white">
+
+    <header class="md:hidden flex items-center justify-between bg-darkCard border-b border-darkBorder px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 via-blue-600 to-purple-600 flex items-center justify-center font-extrabold text-white text-lg shadow-lg">
+                &lt;/&gt;
+            </div>
+            <div>
+                <span class="font-extrabold text-base bg-gradient-to-r from-orange-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">DevMaster</span>
+                <span class="text-[10px] block text-slate-400 font-mono">HTML & CSS Hub</span>
+            </div>
+        </div>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white p-2">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-black/80 z-50 transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col w-80 bg-darkCard border-r border-darkBorder p-5">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
+                    &lt;/&gt;
+                </div>
+                <span class="font-bold text-white text-base">Menu Guia Dev</span>
+            </div>
+            <button id="mobile-close-btn" class="text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <div class="mb-4">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+                <input type="text" id="mobile-search-input" onkeyup="filterTopics(this.value)" placeholder="Buscar tag, propriedade..." class="w-full bg-darkBg border border-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+            </div>
+        </div>
+
+        <nav class="space-y-1 overflow-y-auto flex-1 text-sm font-medium" id="mobile-nav-list">
+            <!-- Navigation buttons populated dynamically -->
+        </nav>
+    </div>
+
+    <aside class="hidden md:flex flex-col w-72 bg-darkCard border-r border-darkBorder sticky top-0 h-screen z-40 p-5 flex-shrink-0">
+        <!-- Logo Header -->
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 via-blue-600 to-purple-600 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-blue-500/10">
+                &lt;/&gt;
+            </div>
+            <div>
+                <h1 class="font-extrabold text-lg text-white tracking-tight">DevMaster</h1>
+                <p class="text-[11px] text-blue-400 font-mono font-medium">Guia HTML & CSS v2.0</p>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-5">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+                <input type="text" id="desktop-search-input" onkeyup="filterTopics(this.value)" placeholder="Buscar (ex: flex, input, margin)..." class="w-full bg-darkBg border border-darkBorder rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all">
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation Items -->
+        <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 px-2">Tópicos do Guia</div>
+        <nav class="space-y-1 overflow-y-auto flex-1 text-xs font-medium pr-1" id="desktop-nav-list">
+            <button onclick="switchTab('html-basic')" class="tab-btn active w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="html tag head body h1 p a img link span div">
+                <i class="fa-brands fa-html5 text-orange-500 w-4 text-center"></i>
+                <span>1. HTML Básico & Tags</span>
+            </button>
+            <button onclick="switchTab('html-semantic')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="semantica header nav main article section content aside footer seo acessibilidade">
+                <i class="fa-solid fa-sitemap text-amber-400 w-4 text-center"></i>
+                <span>2. HTML Semântico & SEO</span>
+            </button>
+            <button onclick="switchTab('html-forms')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="formularios form input label textarea select button checkbox radio date email password color file">
+                <i class="fa-solid fa-receipt text-emerald-400 w-4 text-center"></i>
+                <span>3. Formulários & Inputs</span>
+            </button>
+            <button onclick="switchTab('css-basic')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="css seletores classe id tag hover focus nth-child sintaxe estilos">
+                <i class="fa-brands fa-css3-alt text-blue-500 w-4 text-center"></i>
+                <span>4. CSS Seletores & Sintaxe</span>
+            </button>
+            <button onclick="switchTab('css-boxmodel')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="box model margin padding border content box-sizing content-box border-box espacamento">
+                <i class="fa-solid fa-cube text-cyan-400 w-4 text-center"></i>
+                <span>5. Box Model Interativo</span>
+            </button>
+            <button onclick="switchTab('css-units')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="unidades cores px rem em vh vw hex rgb hsl color background">
+                <i class="fa-solid fa-palette text-pink-400 w-4 text-center"></i>
+                <span>6. Cores & Unidades</span>
+            </button>
+            <button onclick="switchTab('css-flexbox')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="flexbox display flex direction justify content align items wrap gap layout">
+                <i class="fa-solid fa-table-cells-large text-indigo-400 w-4 text-center"></i>
+                <span>7. Flexbox Playground</span>
+            </button>
+            <button onclick="switchTab('css-grid')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="grid layout template columns rows fr repeat auto-fit gap">
+                <i class="fa-solid fa-border-all text-purple-400 w-4 text-center"></i>
+                <span>8. CSS Grid Layout</span>
+            </button>
+            <button onclick="switchTab('css-position')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="position static relative absolute fixed sticky top left z-index">
+                <i class="fa-solid fa-map-pin text-rose-400 w-4 text-center"></i>
+                <span>9. Posicionamento CSS</span>
+            </button>
+            <button onclick="switchTab('css-effects')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="transicoes transformacoes animacoes hover scale rotate translate transition keyframes">
+                <i class="fa-solid fa-wand-magic-sparkles text-yellow-400 w-4 text-center"></i>
+                <span>10. Transições & Efeitos</span>
+            </button>
+            <button onclick="switchTab('live-editor')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="editor playground codigo ao vivo iframe preview editar html css">
+                <i class="fa-solid fa-laptop-code text-emerald-400 w-4 text-center"></i>
+                <span>11. Playground de Código</span>
+            </button>
+            <button onclick="switchTab('quiz')" class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-left transition-all text-slate-300 hover:text-white hover:bg-slate-800/50" data-keywords="quiz teste perguntas conhecimento exercicios html css">
+                <i class="fa-solid fa-circle-question text-teal-400 w-4 text-center"></i>
+                <span>12. Quiz de Conhecimento</span>
+            </button>
+        </nav>
+
+        <div class="mt-auto pt-4 border-t border-darkBorder text-[11px] text-slate-500">
+            <p>DevMaster Cheat Sheet &copy; 2026</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-10 overflow-y-auto max-w-6xl mx-auto w-full">
+
+        <!-- Toast Floating Notification -->
+        <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-emerald-500 text-slate-950 px-5 py-3 rounded-xl font-bold shadow-2xl flex items-center space-x-2 text-sm">
+            <i class="fa-solid fa-check-circle text-lg"></i>
+            <span id="toast-msg">Código copiado para a área de transferência!</span>
+        </div>
+
+        <!-- 1. HTML BASIC & TAGS -->
+        <section id="view-html-basic" class="tab-content space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20">Módulos HTML • 01</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">HTML5 Básico & Tags Fundamentais</h2>
+                <p class="text-slate-400 text-sm mt-2">HTML (HyperText Markup Language) é a estrutura básica da Web. Cada tag define um tipo de elemento estrutural ou de conteúdo.</p>
+            </div>
+
+            <!-- Essential Tags Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-darkCard border border-darkBorder p-4 rounded-2xl">
+                    <span class="font-mono text-xs font-bold text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md">&lt;!DOCTYPE html&gt;</span>
+                    <h3 class="font-bold text-white mt-2 text-sm">Declaração de Tipo</h3>
+                    <p class="text-xs text-slate-400 mt-1">Informa ao navegador que o documento utiliza a especificação HTML5 moderna.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-4 rounded-2xl">
+                    <span class="font-mono text-xs font-bold text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md">&lt;html&gt; e &lt;head&gt;</span>
+                    <h3 class="font-bold text-white mt-2 text-sm">Raiz e Metadados</h3>
+                    <p class="text-xs text-slate-400 mt-1">`html` engloba todo o documento. `head` guarda metadados, títulos, links CSS e scripts.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-4 rounded-2xl">
+                    <span class="font-mono text-xs font-bold text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md">&lt;body&gt;</span>
+                    <h3 class="font-bold text-white mt-2 text-sm">Corpo Visível</h3>
+                    <p class="text-xs text-slate-400 mt-1">Contém todo o conteúdo visual renderizado na tela para o usuário final.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-4 rounded-2xl">
+                    <span class="font-mono text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md">&lt;h1&gt; até &lt;h6&gt;</span>
+                    <h3 class="font-bold text-white mt-2 text-sm">Títulos e Cabeçalhos</h3>
+                    <p class="text-xs text-slate-400 mt-1">Definem a hierarquia do texto. `h1` é o título principal (máximo 1 por página).</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-4 rounded-2xl">
+                    <span class="font-mono text-xs font-bold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md">&lt;p&gt;, &lt;span&gt;, &lt;div&gt;</span>
+                    <h3 class="font-bold text-white mt-2 text-sm">Parágrafos e Divisores</h3>
+                    <p class="text-xs text-slate-400 mt-1">`p` para texto de bloco. `div` é container genérico em bloco. `span` para linha.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-4 rounded-2xl">
+                    <span class="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md">&lt;a&gt; e &lt;img&gt;</span>
+                    <h3 class="font-bold text-white mt-2 text-sm">Links e Mídias</h3>
+                    <p class="text-xs text-slate-400 mt-1">`a` cria hiperlinks com `href`. `img` exibe imagens com `src` e atributo `alt` obrigatório.</p>
+                </div>
+            </div>
+
+            <!-- Code Block Component -->
+            <div class="bg-darkCard border border-darkBorder rounded-2xl overflow-hidden shadow-xl">
+                <div class="bg-slate-900/80 px-4 py-3 border-b border-darkBorder flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="text-xs font-mono text-slate-400 ml-2">estrutura-base.html</span>
+                    </div>
+                    <button onclick="copySnippet(this)" class="text-xs bg-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 transition-colors">
+                        <i class="fa-regular fa-copy mr-1"></i> Copiar
+                    </button>
+                </div>
+                <pre class="p-4 text-xs md:text-sm text-slate-300 overflow-x-auto leading-relaxed"><code><span class="code-comment">&lt;!-- Estrutura padrão de um documento HTML5 --&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE html&gt;</span>
+<span class="code-tag">&lt;html</span> <span class="code-attr">lang</span>=<span class="code-val">"pt-BR"</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+    <span class="code-tag">&lt;meta</span> <span class="code-attr">charset</span>=<span class="code-val">"UTF-8"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;meta</span> <span class="code-attr">name</span>=<span class="code-val">"viewport"</span> <span class="code-attr">content</span>=<span class="code-val">"width=device-width, initial-scale=1.0"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;title&gt;</span>Meu Primeiro Projeto<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+    <span class="code-tag">&lt;h1&gt;</span>Olá, Mundo!<span class="code-tag">&lt;/h1&gt;</span>
+    <span class="code-tag">&lt;p&gt;</span>Este é um parágrafo contendo um <span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-val">"https://google.com"</span> <span class="code-attr">target</span>=<span class="code-val">"_blank"</span><span class="code-tag">&gt;</span>link externo<span class="code-tag">&lt;/a&gt;</span>.<span class="code-tag">&lt;/p&gt;</span>
+    <span class="code-tag">&lt;img</span> <span class="code-attr">src</span>=<span class="code-val">"foto.jpg"</span> <span class="code-attr">alt</span>=<span class="code-val">"Descrição acessível da imagem"</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></code></pre>
+            </div>
+        </section>
+
+        <!-- 2. HTML SEMANTIC -->
+        <section id="view-html-semantic" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Módulos HTML • 02</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">HTML Semântico & SEO</h2>
+                <p class="text-slate-400 text-sm mt-2">Usar tags semânticas significa dar significado ao conteúdo para motores de busca (Google SEO) e leitores de tela para pessoas com deficiência visual.</p>
+            </div>
+
+            <!-- Visual Semantic Layout Diagram -->
+            <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl">
+                <h3 class="font-bold text-white text-sm mb-4">Esquema Estrutural de uma Página Semântica</h3>
+                <div class="space-y-3 font-mono text-xs text-center font-bold">
+                    <div class="bg-amber-500/20 border border-amber-500/40 text-amber-300 py-3 rounded-xl">
+                        &lt;header&gt; (Cabeçalho da página ou logotipo / navegação)
+                    </div>
+                    <div class="bg-blue-500/20 border border-blue-500/40 text-blue-300 py-2 rounded-xl">
+                        &lt;nav&gt; (Links de navegação principal)
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="md:col-span-2 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 p-4 rounded-xl space-y-2">
+                            <div>&lt;main&gt; (Conteúdo principal)</div>
+                            <div class="bg-emerald-600/30 border border-emerald-400/30 p-2 rounded-lg text-[11px]">
+                                &lt;article&gt; (Conteúdo autônomo, post de blog ou notícia)
+                            </div>
+                            <div class="bg-emerald-600/30 border border-emerald-400/30 p-2 rounded-lg text-[11px]">
+                                &lt;section&gt; (Seção temática do documento)
+                            </div>
+                        </div>
+                        <div class="bg-purple-500/20 border border-purple-500/40 text-purple-300 p-4 rounded-xl flex items-center justify-center">
+                            &lt;aside&gt;<br>(Barra lateral, recomendações ou anúncios)
+                        </div>
+                    </div>
+                    <div class="bg-slate-700/40 border border-slate-600/40 text-slate-300 py-3 rounded-xl">
+                        &lt;footer&gt; (Rodapé, direitos autorais, links sociais)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. HTML FORMS -->
+        <section id="view-html-forms" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Módulos HTML • 03</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Formulários & Inputs Interativos</h2>
+                <p class="text-slate-400 text-sm mt-2">Os formulários permitem a coleta de dados digitados pelo usuário. Teste os componentes abaixo em tempo real.</p>
+            </div>
+
+            <!-- Live Form Builder Preview & Controls -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Form Preview -->
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-white text-base flex items-center space-x-2 border-b border-darkBorder pb-3">
+                        <i class="fa-solid fa-eye text-emerald-400"></i>
+                        <span>Preview do Formulário ao Vivo</span>
+                    </h3>
+                    <form onsubmit="event.preventDefault(); alert('Formulário enviado com sucesso!');" class="space-y-4 text-xs">
+                        <div>
+                            <label class="block text-slate-300 mb-1 font-medium">Nome Completo (&lt;input type="text"&gt;)</label>
+                            <input type="text" placeholder="Digite seu nome..." required class="w-full bg-darkBg border border-darkBorder rounded-xl px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-300 mb-1 font-medium">Email</label>
+                                <input type="email" placeholder="seu@email.com" class="w-full bg-darkBg border border-darkBorder rounded-xl px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 mb-1 font-medium">Cor Favorita</label>
+                                <input type="color" value="#06b6d4" class="w-full bg-darkBg border border-darkBorder rounded-xl h-9 p-1 cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-300 mb-1 font-medium">Data de Nascimento</label>
+                                <input type="date" class="w-full bg-darkBg border border-darkBorder rounded-xl px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 mb-1 font-medium">Nível de Experiência</label>
+                                <select class="w-full bg-darkBg border border-darkBorder rounded-xl px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                                    <option>Iniciante</option>
+                                    <option>Intermediário</option>
+                                    <option>Avançado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 pt-2">
+                            <label class="flex items-center space-x-2 text-slate-300 cursor-pointer">
+                                <input type="checkbox" checked class="rounded accent-emerald-500">
+                                <span>Aceitar Termos</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-xl transition-colors">
+                            Enviar Dados
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Form Code snippet -->
+                <div class="bg-darkCard border border-darkBorder rounded-2xl overflow-hidden flex flex-col">
+                    <div class="bg-slate-900/80 px-4 py-3 border-b border-darkBorder flex items-center justify-between">
+                        <span class="text-xs font-mono text-slate-400">form-exemplo.html</span>
+                        <button onclick="copySnippet(this)" class="text-xs bg-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700">
+                            <i class="fa-regular fa-copy mr-1"></i> Copiar
+                        </button>
+                    </div>
+                    <pre class="p-4 text-xs text-slate-300 overflow-x-auto leading-relaxed flex-1"><code><span class="code-tag">&lt;form</span> <span class="code-attr">action</span>=<span class="code-val">"/enviar"</span> <span class="code-attr">method</span>=<span class="code-val">"POST"</span><span class="code-tag">&gt;</span>
+  <span class="code-tag">&lt;label</span> <span class="code-attr">for</span>=<span class="code-val">"nome"</span><span class="code-tag">&gt;</span>Nome Completo:<span class="code-tag">&lt;/label&gt;</span>
+  <span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-val">"text"</span> <span class="code-attr">id</span>=<span class="code-val">"nome"</span> <span class="code-attr">required</span> <span class="code-attr">placeholder</span>=<span class="code-val">"Seu nome"</span><span class="code-tag">&gt;</span>
+
+  <span class="code-tag">&lt;label</span> <span class="code-attr">for</span>=<span class="code-val">"email"</span><span class="code-tag">&gt;</span>Email:<span class="code-tag">&lt;/label&gt;</span>
+  <span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-val">"email"</span> <span class="code-attr">id</span>=<span class="code-val">"email"</span><span class="code-tag">&gt;</span>
+
+  <span class="code-tag">&lt;label</span> <span class="code-attr">for</span>=<span class="code-val">"nivel"</span><span class="code-tag">&gt;</span>Nível:<span class="code-tag">&lt;/label&gt;</span>
+  <span class="code-tag">&lt;select</span> <span class="code-attr">id</span>=<span class="code-val">"nivel"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;option&gt;</span>Iniciante<span class="code-tag">&lt;/option&gt;</span>
+    <span class="code-tag">&lt;option&gt;</span>Avançado<span class="code-tag">&lt;/option&gt;</span>
+  <span class="code-tag">&lt;/select&gt;</span>
+
+  <span class="code-tag">&lt;button</span> <span class="code-attr">type</span>=<span class="code-val">"submit"</span><span class="code-tag">&gt;</span>Enviar<span class="code-tag">&lt;/button&gt;</span>
+<span class="code-tag">&lt;/form&gt;</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CSS BASIC & SELECTORS -->
+        <section id="view-css-basic" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Módulos CSS • 04</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">CSS Seletores & Sintaxe</h2>
+                <p class="text-slate-400 text-sm mt-2">Cascading Style Sheets define a apresentação visual. Os seletores escolhem quais elementos HTML serão estilizados.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="text-xs font-mono text-blue-400 bg-blue-500/10 px-2 py-1 rounded">Seletor Elemento</span>
+                    <h3 class="font-bold text-white mt-2">Por Tag HTML</h3>
+                    <p class="text-xs text-slate-400 mt-1 mb-3">Afeta todas as tags do tipo especificadas.</p>
+                    <pre class="bg-darkBg p-3 rounded-xl text-xs"><code><span class="code-tag">h1</span> { <span class="code-prop">color</span>: <span class="code-val">#3b82f6</span>; }</code></pre>
+                </div>
+
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">Seletor Classe (.classe)</span>
+                    <h3 class="font-bold text-white mt-2">Por Classe Reutilizável</h3>
+                    <p class="text-xs text-slate-400 mt-1 mb-3">Aplica estilo em qualquer tag com o atributo `class`.</p>
+                    <pre class="bg-darkBg p-3 rounded-xl text-xs"><code><span class="code-tag">.cartao</span> { <span class="code-prop">background</span>: <span class="code-val">#1e293b</span>; }</code></pre>
+                </div>
+
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="text-xs font-mono text-amber-400 bg-amber-500/10 px-2 py-1 rounded">Seletor ID (#id)</span>
+                    <h3 class="font-bold text-white mt-2">Por ID Único</h3>
+                    <p class="text-xs text-slate-400 mt-1 mb-3">Aplica a um elemento individual com ID específico.</p>
+                    <pre class="bg-darkBg p-3 rounded-xl text-xs"><code><span class="code-tag">#topo</span> { <span class="code-prop">position</span>: <span class="code-val">sticky</span>; }</code></pre>
+                </div>
+
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-1 rounded">Pseudo-classes (:hover)</span>
+                    <h3 class="font-bold text-white mt-2">Estados e Interatividade</h3>
+                    <p class="text-xs text-slate-400 mt-1 mb-3">Aplica quando o usuário interage (mouse por cima, foco).</p>
+                    <pre class="bg-darkBg p-3 rounded-xl text-xs"><code><span class="code-tag">button:hover</span> { <span class="code-prop">opacity</span>: <span class="code-val">0.8</span>; }</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. INTERACTIVE BOX MODEL -->
+        <section id="view-css-boxmodel" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Módulos CSS • 05</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Box Model Interativo</h2>
+                <p class="text-slate-400 text-sm mt-2">No CSS, todo elemento é tratado como uma caixa retangular. Altere os sliders para compreender o relacionamento entre Margin, Border, Padding e Content.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Controls -->
+                <div class="lg:col-span-5 bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-white text-sm">Controles de Dimensão</h3>
+
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>Box Sizing</span>
+                            <span id="bm-sizing-val" class="text-cyan-400 font-mono">border-box</span>
+                        </div>
+                        <select id="bm-sizing" onchange="updateBoxModelSim()" class="w-full bg-darkBg border border-darkBorder rounded-xl px-3 py-2 text-xs text-white">
+                            <option value="border-box" selected>border-box (Recomendado - Largura inclui padding/borda)</option>
+                            <option value="content-box">content-box (Padrão Antigo - Largura apenas do conteúdo)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>Padding (Espaçamento Interno)</span>
+                            <span id="bm-padding-val" class="text-cyan-400 font-mono">20px</span>
+                        </div>
+                        <input type="range" id="bm-padding" min="0" max="60" value="20" oninput="updateBoxModelSim()" class="w-full accent-cyan-500">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>Border (Borda)</span>
+                            <span id="bm-border-val" class="text-emerald-400 font-mono">4px</span>
+                        </div>
+                        <input type="range" id="bm-border" min="0" max="20" value="4" oninput="updateBoxModelSim()" class="w-full accent-emerald-500">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>Margin (Espaçamento Externo)</span>
+                            <span id="bm-margin-val" class="text-purple-400 font-mono">20px</span>
+                        </div>
+                        <input type="range" id="bm-margin" min="0" max="60" value="20" oninput="updateBoxModelSim()" class="w-full accent-purple-500">
+                    </div>
+                </div>
+
+                <!-- Visual Box Renderer -->
+                <div class="lg:col-span-7 bg-darkCard border border-darkBorder p-8 rounded-2xl flex flex-col items-center justify-center min-h-[360px] overflow-hidden">
+                    <!-- Margin Box -->
+                    <div id="sim-margin-box" class="transition-all duration-200 bg-purple-500/20 border border-purple-500/40 rounded-2xl p-4 text-purple-300 font-mono text-xs relative">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold uppercase text-purple-400">Margin</span>
+                        
+                        <!-- Border Box -->
+                        <div id="sim-border-box" class="transition-all duration-200 bg-emerald-500/20 border-4 border-emerald-500 rounded-xl p-4 text-emerald-300 relative">
+                            <span class="absolute top-1 left-2 text-[10px] font-bold uppercase text-emerald-400">Border</span>
+
+                            <!-- Padding Box -->
+                            <div id="sim-padding-box" class="transition-all duration-200 bg-cyan-500/20 border border-cyan-500/40 rounded-lg p-6 text-cyan-300 relative">
+                                <span class="absolute top-1 left-2 text-[10px] font-bold uppercase text-cyan-400">Padding</span>
+
+                                <!-- Content -->
+                                <div class="bg-darkBg border border-slate-700 px-6 py-4 rounded text-center text-white font-bold">
+                                    Conteúdo (Content)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. UNITS AND COLORS -->
+        <section id="view-css-units" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20">Módulos CSS • 06</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Unidades de Medida & Cores</h2>
+                <p class="text-slate-400 text-sm mt-2">Valores de dimensionamento relativo vs absoluto e formatos de cores modernas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Units -->
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-white text-base">Unidades de Medida</h3>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder">
+                            <strong class="text-pink-400 font-mono">px (Pixels):</strong> Absoluto. Tamanho fixo e não escala automaticamente.
+                        </li>
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder">
+                            <strong class="text-pink-400 font-mono">rem:</strong> Relativo ao `font-size` da raiz (`&lt;html&gt;`). Padrão 1rem = 16px. Ideal para responsividade!
+                        </li>
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder">
+                            <strong class="text-pink-400 font-mono">em:</strong> Relativo ao tamanho da fonte do próprio pai direto do elemento.
+                        </li>
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder">
+                            <strong class="text-pink-400 font-mono">vw / vh:</strong> 1vw = 1% da largura da tela (viewport width). 1vh = 1% da altura da tela.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Colors -->
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-white text-base">Sistemas de Cores</h3>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder flex items-center justify-between">
+                            <div><strong class="text-blue-400 font-mono">HEX:</strong> `#3b82f6`</div>
+                            <span class="w-6 h-6 rounded-md bg-[#3b82f6]"></span>
+                        </li>
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder flex items-center justify-between">
+                            <div><strong class="text-emerald-400 font-mono">RGB / RGBA:</strong> `rgb(16, 185, 129)`</div>
+                            <span class="w-6 h-6 rounded-md bg-[rgb(16,185,129)]"></span>
+                        </li>
+                        <li class="bg-darkBg p-3 rounded-xl border border-darkBorder flex items-center justify-between">
+                            <div><strong class="text-purple-400 font-mono">HSL:</strong> `hsl(270, 91%, 65%)`</div>
+                            <span class="w-6 h-6 rounded-md bg-[hsl(270,91%,65%)]"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. FLEXBOX PLAYGROUND -->
+        <section id="view-css-flexbox" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Módulos CSS • 07</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Flexbox Playground Interativo</h2>
+                <p class="text-slate-400 text-sm mt-2">Flexbox organiza itens em 1 dimensão (linha ou coluna) de forma responsiva.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Controls -->
+                <div class="lg:col-span-4 bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-white text-sm">Ajustar Propriedades Flex</h3>
+
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">flex-direction</label>
+                        <select id="flex-dir" onchange="updateFlexSim()" class="w-full bg-darkBg border border-darkBorder rounded-xl p-2 text-xs text-white">
+                            <option value="row" selected>row (Horizontal)</option>
+                            <option value="column">column (Vertical)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">justify-content (Eixo Principal)</label>
+                        <select id="flex-justify" onchange="updateFlexSim()" class="w-full bg-darkBg border border-darkBorder rounded-xl p-2 text-xs text-white">
+                            <option value="flex-start">flex-start</option>
+                            <option value="center">center</option>
+                            <option value="flex-end">flex-end</option>
+                            <option value="space-between" selected>space-between</option>
+                            <option value="space-around">space-around</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">align-items (Eixo Cruzado)</label>
+                        <select id="flex-align" onchange="updateFlexSim()" class="w-full bg-darkBg border border-darkBorder rounded-xl p-2 text-xs text-white">
+                            <option value="stretch">stretch</option>
+                            <option value="center" selected>center</option>
+                            <option value="flex-start">flex-start</option>
+                            <option value="flex-end">flex-end</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1">gap (Espaço entre itens)</label>
+                        <input type="range" id="flex-gap" min="0" max="40" value="16" oninput="updateFlexSim()" class="w-full accent-indigo-500">
+                    </div>
+                </div>
+
+                <!-- Preview Area -->
+                <div class="lg:col-span-8 bg-darkCard border border-darkBorder p-6 rounded-2xl min-h-[380px] flex flex-col justify-between">
+                    <div id="flex-sim-box" class="bg-darkBg border border-darkBorder p-4 rounded-xl flex-1 flex transition-all duration-300" style="justify-content: space-between; align-items: center; flex-direction: row; gap: 16px;">
+                        <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">1</div>
+                        <div class="w-16 h-20 bg-purple-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">2</div>
+                        <div class="w-16 h-16 bg-emerald-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">3</div>
+                    </div>
+
+                    <div class="mt-4 bg-slate-900 p-3 rounded-xl font-mono text-xs text-indigo-300 border border-darkBorder" id="flex-css-out">
+                        display: flex; justify-content: space-between; align-items: center; flex-direction: row; gap: 16px;
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. CSS GRID -->
+        <section id="view-css-grid" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Módulos CSS • 08</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">CSS Grid Layout</h2>
+                <p class="text-slate-400 text-sm mt-2">O CSS Grid é bidimensional (linhas e colunas simultâneas), ideal para páginas completas e galerias.</p>
+            </div>
+
+            <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-4">
+                <h3 class="font-bold text-white text-sm">Exemplo de Grid Responsivo Automático</h3>
+                <pre class="bg-darkBg p-3 rounded-xl font-mono text-xs text-slate-300"><code><span class="code-prop">display</span>: <span class="code-val">grid</span>;
+<span class="code-prop">grid-template-columns</span>: <span class="code-val">repeat(auto-fit, minmax(180px, 1fr))</span>;
+<span class="code-prop">gap</span>: <span class="code-val">1rem</span>;</code></pre>
+
+                <!-- Visual Grid Demonstration -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                    <div class="bg-purple-600/30 border border-purple-500/40 p-6 rounded-xl text-center font-bold text-purple-300">Item 1</div>
+                    <div class="bg-purple-600/30 border border-purple-500/40 p-6 rounded-xl text-center font-bold text-purple-300">Item 2</div>
+                    <div class="bg-purple-600/30 border border-purple-500/40 p-6 rounded-xl text-center font-bold text-purple-300">Item 3</div>
+                    <div class="bg-purple-600/30 border border-purple-500/40 p-6 rounded-xl text-center font-bold text-purple-300">Item 4</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. POSITIONING -->
+        <section id="view-css-position" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">Módulos CSS • 09</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Posicionamento no CSS</h2>
+                <p class="text-slate-400 text-sm mt-2">Controla a localização do elemento no fluxo do documento.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="font-mono text-xs text-rose-400 font-bold">static (Padrão)</span>
+                    <p class="text-xs text-slate-400 mt-1">Segue o fluxo normal da página. Não aceita top/left/z-index.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="font-mono text-xs text-rose-400 font-bold">relative</span>
+                    <p class="text-xs text-slate-400 mt-1">Desloca-se em relação à sua posição original sem afetar outros elementos.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="font-mono text-xs text-rose-400 font-bold">absolute</span>
+                    <p class="text-xs text-slate-400 mt-1">Posiciona-se em relação ao seu ancestral mais próximo que possua `position: relative`.</p>
+                </div>
+                <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl">
+                    <span class="font-mono text-xs text-rose-400 font-bold">fixed / sticky</span>
+                    <p class="text-xs text-slate-400 mt-1">`fixed` fixa na tela inteira. `sticky` fixa ao rolar a página até certo limite.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. EFFECTS AND ANIMATIONS -->
+        <section id="view-css-effects" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Módulos CSS • 10</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Transições & Transformações</h2>
+                <p class="text-slate-400 text-sm mt-2">Adicione animações e efeitos ao passar o mouse ou interagir com componentes.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl text-center flex flex-col items-center justify-center space-y-4">
+                    <p class="text-xs text-slate-400">Passe o mouse para dar Zoom Scale</p>
+                    <div class="w-20 h-20 bg-yellow-500 rounded-2xl flex items-center justify-center text-slate-950 font-bold transition-transform duration-300 hover:scale-125 cursor-pointer shadow-lg">
+                        Scale
+                    </div>
+                </div>
+
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl text-center flex flex-col items-center justify-center space-y-4">
+                    <p class="text-xs text-slate-400">Passe o mouse para Rotacionar</p>
+                    <div class="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center text-white font-bold transition-transform duration-500 hover:rotate-45 cursor-pointer shadow-lg">
+                        Rotate
+                    </div>
+                </div>
+
+                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl text-center flex flex-col items-center justify-center space-y-4">
+                    <p class="text-xs text-slate-400">Passe o mouse para Elevação</p>
+                    <div class="w-20 h-20 bg-emerald-500 rounded-2xl flex items-center justify-center text-slate-950 font-bold transition-all duration-300 hover:-translate-y-3 cursor-pointer shadow-lg">
+                        Translate
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. LIVE CODE PLAYGROUND -->
+        <section id="view-live-editor" class="tab-content hidden space-y-6">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Ferramenta Interativa</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Playground de Código ao Vivo</h2>
+                <p class="text-slate-400 text-sm mt-2">Edite o HTML e CSS abaixo e veja a renderização instantânea no painel de Preview.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Inputs -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Código HTML</label>
+                        <textarea id="editor-html" oninput="runCode()" class="w-full h-40 bg-darkCard border border-darkBorder rounded-xl p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-emerald-500">&lt;div class="card"&gt;
+  &lt;h1&gt;DevMaster Live&lt;/h1&gt;
+  &lt;p&gt;Edite o código e veja o resultado em tempo real!&lt;/p&gt;
+  &lt;button&gt;Clique Aqui&lt;/button&gt;
+&lt;/div&gt;</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Código CSS</label>
+                        <textarea id="editor-css" oninput="runCode()" class="w-full h-40 bg-darkCard border border-darkBorder rounded-xl p-3 font-mono text-xs text-slate-200 focus:outline-none focus:border-emerald-500">body {
+  font-family: sans-serif;
+  background: #0f172a;
+  color: #white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-h: 100vh;
+  margin: 0;
+}
+.card {
+  background: #1e293b;
+  padding: 2rem;
+  border-radius: 1rem;
+  color: #f8fafc;
+  text-align: center;
+  border: 1px solid #334155;
+}
+button {
+  background: #10b981;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: black;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}</textarea>
+                    </div>
+                </div>
+
+                <!-- Live Iframe Output -->
+                <div class="bg-darkCard border border-darkBorder rounded-2xl p-4 flex flex-col h-[360px] lg:h-auto">
+                    <span class="text-xs font-mono text-slate-400 mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-play text-emerald-400"></i>
+                        <span>Resultado / Renderização ao Vivo</span>
+                    </span>
+                    <iframe id="editor-preview" class="w-full flex-1 bg-white rounded-xl border border-slate-700"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. KNOWLEDGE QUIZ -->
+        <section id="view-quiz" class="tab-content hidden space-y-8">
+            <div class="border-b border-darkBorder pb-6">
+                <span class="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20">Avaliação</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-3">Quiz de Conhecimento HTML & CSS</h2>
+                <p class="text-slate-400 text-sm mt-2">Teste seus conhecimentos resolvendo as questões abaixo.</p>
+            </div>
+
+            <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl space-y-6" id="quiz-container">
+                <!-- Question 1 -->
+                <div class="space-y-3">
+                    <p class="font-bold text-white text-sm">1. Qual tag HTML5 é recomendada para o conteúdo principal e único de uma página web?</p>
+                    <div class="space-y-2 text-xs">
+                        <button onclick="checkAnswer(this, false)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">&lt;div id="main"&gt;</button>
+                        <button onclick="checkAnswer(this, true)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">&lt;main&gt;</button>
+                        <button onclick="checkAnswer(this, false)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">&lt;section&gt;</button>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="space-y-3 pt-4 border-t border-darkBorder">
+                    <p class="font-bold text-white text-sm">2. Qual propriedade CSS faz com que o padding e a borda NÃO aumentem a largura total do elemento?</p>
+                    <div class="space-y-2 text-xs">
+                        <button onclick="checkAnswer(this, false)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">box-sizing: content-box;</button>
+                        <button onclick="checkAnswer(this, true)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">box-sizing: border-box;</button>
+                        <button onclick="checkAnswer(this, false)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">margin-collapse: true;</button>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="space-y-3 pt-4 border-t border-darkBorder">
+                    <p class="font-bold text-white text-sm">3. Qual valor da propriedade `position` coloca o elemento fixado na tela do usuário durante a rolagem?</p>
+                    <div class="space-y-2 text-xs">
+                        <button onclick="checkAnswer(this, false)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">position: absolute;</button>
+                        <button onclick="checkAnswer(this, false)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">position: relative;</button>
+                        <button onclick="checkAnswer(this, true)" class="quiz-option w-full p-3 rounded-xl bg-darkBg border border-darkBorder text-left hover:border-slate-600 transition-colors">position: fixed;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Copy mobile navigation items from desktop
+        window.onload = function() {
+            const desktopNav = document.getElementById('desktop-nav-list');
+            const mobileNav = document.getElementById('mobile-nav-list');
+            mobileNav.innerHTML = desktopNav.innerHTML;
+            
+            // Initializing interactive simulators
+            updateBoxModelSim();
+            updateFlexSim();
+            runCode();
+        };
+
+        // Navigation tab switching
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(t => t.classList.add('hidden'));
+
+            const activeTab = document.getElementById(`view-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            // Update Tab Active Styling
+            const allBtns = document.querySelectorAll('.tab-btn');
+            allBtns.forEach(b => b.classList.remove('active'));
+
+            const matches = document.querySelectorAll(`button[onclick="switchTab('${tabId}')"]`);
+            matches.forEach(m => m.classList.add('active'));
+
+            // Close Mobile Menu if open
+            document.getElementById('mobile-menu').classList.add('-translate-x-full');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile Menu Toggles
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.remove('-translate-x-full');
+        });
+        document.getElementById('mobile-close-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.add('-translate-x-full');
+        });
+
+        // Topic Filter Search Engine
+        function filterTopics(query) {
+            const term = query.toLowerCase().trim();
+            const btns = document.querySelectorAll('.tab-btn');
+
+            btns.forEach(btn => {
+                const keywords = btn.getAttribute('data-keywords') || '';
+                const text = btn.innerText.toLowerCase();
+
+                if (text.includes(term) || keywords.includes(term)) {
+                    btn.style.display = 'flex';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        }
+
+        // Toast Notification System
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 2500);
+        }
+
+        // Copy Code Snippet Handler
+        function copySnippet(btn) {
+            const codeBlock = btn.closest('.bg-darkCard').querySelector('code');
+            const text = codeBlock.innerText;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Código copiado para a área de transferência!");
+            } catch (err) {
+                showToast("Falha ao copiar código.");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Box Model Live Simulator logic
+        function updateBoxModelSim() {
+            const padding = document.getElementById('bm-padding').value;
+            const border = document.getElementById('bm-border').value;
+            const margin = document.getElementById('bm-margin').value;
+            const sizing = document.getElementById('bm-sizing').value;
+
+            document.getElementById('bm-padding-val').innerText = padding + 'px';
+            document.getElementById('bm-border-val').innerText = border + 'px';
+            document.getElementById('bm-margin-val').innerText = margin + 'px';
+            document.getElementById('bm-sizing-val').innerText = sizing;
+
+            document.getElementById('sim-margin-box').style.padding = margin + 'px';
+            document.getElementById('sim-border-box').style.borderWidth = border + 'px';
+            document.getElementById('sim-padding-box').style.padding = padding + 'px';
+        }
+
+        // Flexbox Live Simulator logic
+        function updateFlexSim() {
+            const dir = document.getElementById('flex-dir').value;
+            const justify = document.getElementById('flex-justify').value;
+            const align = document.getElementById('flex-align').value;
+            const gap = document.getElementById('flex-gap').value;
+
+            const box = document.getElementById('flex-sim-box');
+            box.style.flexDirection = dir;
+            box.style.justifyContent = justify;
+            box.style.alignItems = align;
+            box.style.gap = gap + 'px';
+
+            document.getElementById('flex-css-out').innerText = 
+                `display: flex; flex-direction: ${dir}; justify-content: ${justify}; align-items: ${align}; gap: ${gap}px;`;
+        }
+
+        // Live Editor Code Runner (iFrame rendering)
+        function runCode() {
+            const html = document.getElementById('editor-html').value;
+            const css = document.getElementById('editor-css').value;
+            const iframe = document.getElementById('editor-preview');
+
+            const fullContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>${css}</style>
+                </head>
+                <body>
+                    ${html}
+                </body>
+                </html>
+            `;
+
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(fullContent);
+            doc.close();
+        }
+
+        // Quiz Evaluator
+        function checkAnswer(btn, isCorrect) {
+            const parent = btn.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+
+            options.forEach(opt => {
+                opt.disabled = true;
+                opt.classList.remove('hover:border-slate-600');
+            });
+
+            if (isCorrect) {
+                btn.classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-300');
+                showToast("Resposta Correta! Parabéns!");
+            } else {
+                btn.classList.add('bg-red-500/20', 'border-red-500', 'text-red-300');
+                showToast("Resposta incorreta. Tente analisar o conteúdo novamente!");
+            }
+        }
+    </script>
+</body>
+</html>
